@@ -1,0 +1,11 @@
+@CurioCabinetApi_HostAddress = http://localhost:5243
+
+GET {{CurioCabinetApi_HostAddress}}/openapi/v1.json
+Accept: application/json
+
+###
+
+GET {{CurioCabinetApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
