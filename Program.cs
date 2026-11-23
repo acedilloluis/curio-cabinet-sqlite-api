@@ -1,10 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ClimbLogDb>(options => options.UseSqlite("Data Source=app.db"));
 builder.Services.AddOpenApi();
+
+builder.Services.AddAuthentication().AddJwtBearer();
+builder.Services.AddAuthorization();
 
 WebApplication app = builder.Build();
 
@@ -25,9 +30,9 @@ using (IServiceScope scope = app.Services.CreateScope())
 RouteGroupBuilder climbLogs = app.MapGroup("/logs");
 
 climbLogs.MapGet("/", GetAllLogs);
-climbLogs.MapPost("/", CreateLog);
-climbLogs.MapPut("/{id}", UpdateLog);
-climbLogs.MapDelete("/{id}", DeleteLog);
+climbLogs.MapPost("/", CreateLog).RequireAuthorization();
+climbLogs.MapPut("/{id}", UpdateLog).RequireAuthorization();
+climbLogs.MapDelete("/{id}", DeleteLog).RequireAuthorization();
 
 app.Run();
 
